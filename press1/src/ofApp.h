@@ -27,6 +27,7 @@ class ofApp : public ofBaseApp{
     ofImage image;
     ofImage keyImage; 
     
+    // RANDOM VARIABLES
     vector <float> posX;
     vector <float> posY;
     vector <float> width;
@@ -37,15 +38,34 @@ class ofApp : public ofBaseApp{
     vector <float> randomSinStart;
     vector <int> randomShapeNum;
     
-    float numPhotos; // number of photos in archive
+    // ANIMATOR VARIABLES
     float focus = 1;
-    float step;
+    float step; // frequency of shapes to draw img
+    float lineT; // random line thickness
+    float lineX; // line width
+    float lineY; // line height
+    float randomRot; // random rotate 
+    
+    // KEY NUMBER COUNTER
     bool keyDown;
     bool base[8];
     int numPressed;
     int keyImageGrow;
-    
+    int keyNumber;
      
+    // ARCHIVE VARIABLES
+    float numPhotos; // number of photos in archive
+    float archiveImgHeight; // height of archive img
+    float archiveImgWidth; // width of archive img
+    float shapeSizeSin; // animate shape in archive img
+    float shapeSize; // size of shape for archive img
+     
+    
+    float w1; // img original size
+    float h1;
+    float w2; // img new size
+    float h2;
+    
      
      
     
