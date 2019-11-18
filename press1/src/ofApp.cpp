@@ -27,7 +27,8 @@ void ofApp::setup(){
             randomSinStart.push_back(ofRandom(20));
             randomShapeNum.push_back(ofRandom(1,2));
             
-            focus.push_back(0);
+            focus.push_back(0); 
+            reverseFocus.push_back(ofMap(focus[i], 0, 3, 5, 3));
     }
     
     
@@ -77,16 +78,31 @@ void ofApp::draw(){
      
     // counter for fading animation
     if (keyDown) {
-        focus[keyNumber] = 20;
+//        focus[keyNumber] = 20;
+        
+       for (int i = 0; i < numPhotos; i++) {
+           focus[keyNumber] += 0.01;
+
+           if (focus[keyNumber] > 3) {
+               focus[keyNumber] = 3;
+           }
+           
+           
+       }
+
          
     } else {
         
         for (int i = 0; i < numPhotos; i++) {
-            focus[i] -= 1;
+            focus[i] -= 0.1;
  
             if (focus[i] < 0) {
                 focus[i] = 0;
             }
+//
+//            posX[keyNumber] =  ofRandom(10,ofGetWidth()/2 );
+//            posY[keyNumber] = ofRandom(10, ofGetHeight() - 20);
+            
         }
          
     }
@@ -94,6 +110,7 @@ void ofApp::draw(){
      
     
     cout << focus[keyNumber] << endl;
+//     cout << keyNumber << endl;
     
  
      
@@ -135,7 +152,7 @@ void ofApp::draw(){
                         lineT = ofRandom(3);
                         randomRot = ofRandom(360);
                         lineX = shapeSize/2;
-                        lineY = ofRandom(1, shapeSize/2 + 5);
+                        lineY = ofRandom(1, shapeSize/2 + reverseFocus[i]);
                         
                        }
         
@@ -155,7 +172,7 @@ void ofApp::draw(){
 
                         shapeSize = ofMap(shapeSizeSin, -1, 1, randomCircSizeSmall[i], randomCircSizeBig[i]);
 
-                        step = 10;
+                        step = 6;
                         lineT = 1;
                         randomRot = 0;
 
@@ -201,9 +218,6 @@ void ofApp::draw(){
 //                             }
                      
                      
-                     reverseFocus = ofMap(focus[i+1], 0, 50, 5, 0);
-                     cout << reverseFocus << endl;
-                     
                      
                      if (focus[i+1] == 0) { // IF BEING RECALLED, DRAW ON RIGHT
 
@@ -221,7 +235,6 @@ void ofApp::draw(){
                      }
                      
                      
-                     
                      else if (focus[i+1] > 0) { // IF NOT BEING RECALLED, DRAW ARCHIVE
                   
                         
@@ -229,9 +242,12 @@ void ofApp::draw(){
                         ofSetColor(c);
                         ofDrawCircle(x,
                         y,
-                        step );
-                          
-                  
+                        focus[i+1] );
+                 
+                         
+                 
+                 
+                 
              }
 
                      

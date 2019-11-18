@@ -53,7 +53,7 @@ class ofApp : public ofBaseApp{
     float numRetrievals = 0; // # of times images have been retreived  
     vector <float> retreivedImg; // store keyNumbers
     vector <float> focus; // store seconds pressed per img
-    float reverseFocus; // store reverse focus 
+    vector <float> reverseFocus; // store reverse focus 
     
     
     // ANIMATOR VARIABLES 
