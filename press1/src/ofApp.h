@@ -38,8 +38,25 @@ class ofApp : public ofBaseApp{
     vector <float> randomSinStart;
     vector <int> randomShapeNum;
     
-    // ANIMATOR VARIABLES
-    float focus = 1;
+    
+    // REMEMBER PREVIOUS IMGS
+    vector <float> drawnImgSizeW;
+    vector <float> drawnImgSizeH;
+    ofPoint eachDrawImgSize;
+    
+    vector <ofColor> drawnImgColor;
+    ofColor eachDrawnImgColor;
+    
+    vector <ofPoint> drawnImgColorPts;
+    ofPoint eachDrawnImgColorPts;
+    
+    float numRetrievals = 0; // # of times images have been retreived  
+    vector <float> retreivedImg; // store keyNumbers
+    vector <float> focus; // store seconds pressed per img
+    float reverseFocus; // store reverse focus 
+    
+    
+    // ANIMATOR VARIABLES 
     float step; // frequency of shapes to draw img
     float lineT; // random line thickness
     float lineX; // line width

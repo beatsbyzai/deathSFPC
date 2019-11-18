@@ -26,7 +26,8 @@ void ofApp::setup(){
             randomCircSizeSmall.push_back(ofRandom(2));
             randomSinStart.push_back(ofRandom(20));
             randomShapeNum.push_back(ofRandom(1,2));
-          
+            
+            focus.push_back(0);
     }
     
     
@@ -43,7 +44,13 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(0);
     
-    cout << focus << endl;
+     
+     
+    
+     
+    
+    
+//    cout << focus << endl;
     
     int step;
 
@@ -64,25 +71,32 @@ void ofApp::draw(){
     for(int i = 0; i < 8; i++) {
         if (base[i]) {
              keyNumber += pow(2.0, i);
-     }
-    }
-    
-    if (keyDown) {
-//        cout << keyNumber << endl;
-        focus += 10;
-    } else {
-        focus -= 10;
-        
-        if(focus < 1) {
-            focus = 1;
         }
     }
+    
      
+    // counter for fading animation
+    if (keyDown) {
+        focus[keyNumber] = 20;
          
+    } else {
+        
+        for (int i = 0; i < numPhotos; i++) {
+            focus[i] -= 1;
+ 
+            if (focus[i] < 0) {
+                focus[i] = 0;
+            }
+        }
+         
+    }
+    
      
     
+    cout << focus[keyNumber] << endl;
     
-    
+ 
+     
     
 // ARCHIVE OF MEMORIES ————————————————————————————————————————————————————
     
@@ -103,7 +117,9 @@ void ofApp::draw(){
                
         
             // IF KEY NUMBER IS NOT BEING RECALLED, DRAW RANDOM POS X Y AND SIZE W H
-            if (keyNumber != i+1) {
+        
+//              if (keyNumber != i+1) {
+                if(focus[i+1] == 0) {
                        archiveImgHeight = h1;
                        archiveImgWidth = w1;
                 
@@ -122,7 +138,10 @@ void ofApp::draw(){
                         lineY = ofRandom(1, shapeSize/2 + 5);
                         
                        }
-            // IF KEY NUMBER IS BEING RECALLED, DRAW ON RIGHT SIDE
+        
+        
+        
+//             IF KEY NUMBER IS BEING RECALLED, DRAW ON RIGHT SIDE
             else {
                         archiveImgWidth = archiveImages[i].getWidth();
                         archiveImgHeight = archiveImages[i].getHeight();
@@ -131,82 +150,101 @@ void ofApp::draw(){
                             ofTranslate((ofGetWidth() / 2) + 50,
                                         (ofGetHeight() - h2) / 2);
                             ofScale(w2/w1);
-                
+
                         shapeSizeSin = sin((ofGetElapsedTimef() + randomSinStart[i]));
 
                         shapeSize = ofMap(shapeSizeSin, -1, 1, randomCircSizeSmall[i], randomCircSizeBig[i]);
-                
+
                         step = 10;
                         lineT = 1;
                         randomRot = 0;
-                
+
                         lineX = shapeSize*2;
                         lineY = shapeSize*2;
-                            
+
                        }
-                   
+
         
         
             // DRAW ALL PIXELS PER IMG
             for(int x = 0; x < archiveImgWidth; x += step) {
-                
                  for(int y = 0; y < archiveImgHeight; y += step) {
+                      
                      
                     ofColor c = archiveImages[i].getColor(x, y);
                      
- 
-                             
-                               // draw circles
-                     
-//                             ofDrawCircle(x ,
-//                             y,
-//                             shapeSize);
- 
-                     
-                     
-                             // draw lines
-                     
-                             
 
-                     if (keyNumber != i+1) {
-                          
-                                ofFill();
-                                ofSetColor(c);
-                                ofSetLineWidth(lineT);
-                         
-    //                            ofRotateDeg(randomRot);
+//                             if (keyNumber != i+1) { // IF NOT BEING RECALLED, DRAW ARCHIVE
+//
+//                                        ofFill();
+//                                        ofSetColor(c);
+//                                        ofSetLineWidth(lineT);
+//
+//                                        ofDrawLine(
+//                                                x,
+//                                                y,
+//                                                x + lineX,
+//                                                y + lineY);
+//
+//
+//
+//                             }
+//                             else { // IF BEING RECALLED, DRAW ON RIGHT
+//
+//
+//                                ofFill();
+//                                ofSetColor(c);
+//                                ofDrawCircle(x,
+//                                y,
+//                                2 );
+//
+//                             }
+                     
+                     
+                     reverseFocus = ofMap(focus[i+1], 0, 50, 5, 0);
+                     cout << reverseFocus << endl;
+                     
+                     
+                     if (focus[i+1] == 0) { // IF BEING RECALLED, DRAW ON RIGHT
+
                         
-                                 
-     
-                                ofDrawLine(
-                                        x,
-                                        y,
-                                        x + lineX,
-                                        y + lineY);
-                         
-                     } else {
-                         
-                         
+                        ofFill();
+                        ofSetColor(c);
+                        ofSetLineWidth(lineT);
+
+                        ofDrawLine(
+                              x,
+                              y,
+                              x + lineX,
+                              y + lineY);
+
+                     }
+                     
+                     
+                     
+                     else if (focus[i+1] > 0) { // IF NOT BEING RECALLED, DRAW ARCHIVE
+                  
                         
-                          
                         ofFill();
                         ofSetColor(c);
                         ofDrawCircle(x,
                         y,
-                        21001 );
-
-//                        ofNoFill();
-//                        ofSetLineWidth(2);
-//                        ofSetColor(0);
-//                        ofDrawCircle(x,
-//                        y,
-//                        5 );
-                         
-                     }
-                     
+                        step );
                           
+                  
+             }
+
+                     
+                     
+                      
+                     
+                     
+                     
+                     
+                     
+                     
                                       
-                                 
+                                                 
                      //                // DRAW WHITE RECT UNDER IMG
                      //                ofSetColor(255);
                      //                ofDrawRectangle((ofGetWidth() / 2) + 50,
@@ -222,7 +260,7 @@ void ofApp::draw(){
                      //                                      w2,
                      //                                      h2);
                      //
-                     
+     
                      
   
                     } //end for y
