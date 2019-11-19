@@ -4,7 +4,6 @@
 
 //--------------------------------------------------------------
 void ofApp::drawZero(float x, float y) {
-   
          
         vector <ofPath> zero = canela.getStringAsPoints("0", true, false);
         for(int z = 0; z < zero.size(); z++) {
@@ -18,13 +17,27 @@ void ofApp::drawZero(float x, float y) {
                             zeroLines[i].draw();
                           ofPopMatrix();
                         }
-            
         }
-        
-        
-    
 }
 
+
+//--------------------------------------------------------------
+void ofApp::drawOne(float x, float y) {
+         
+        vector <ofPath> one = canela.getStringAsPoints("1", true, false);
+        for(int o = 0; o < one.size(); o++) {
+            vector < ofPolyline > oneLines = one[o].getOutline();
+            
+            for(int i = 0; i < oneLines.size(); i++) {
+                          ofPushMatrix();
+                            ofTranslate((ofGetWidth() / 2) + 65, 0); // translate to right side
+                            ofTranslate(x, y); // variables
+                            ofScale(binScale);
+                            oneLines[i].draw();
+                          ofPopMatrix();
+                        }
+        }
+}
 
 
 
@@ -167,10 +180,10 @@ void ofApp::draw(){
         
         ofPushMatrix();
          
-        
+            margin = 250;
             w1 = archiveImages[i].getWidth();
             h1 = archiveImages[i].getHeight();
-            w2 = (ofGetWidth() / 2) - 100;
+            w2 = (ofGetWidth() / 2) - margin;
             h2 = (w2 * h1) / w1;
                
         
@@ -233,7 +246,7 @@ void ofApp::draw(){
                         archiveImgHeight = archiveImages[i].getHeight();
 
                         ofPushMatrix();
-                            ofTranslate((ofGetWidth() / 2) + 50,
+                            ofTranslate((ofGetWidth() / 2) + (margin/2),
                                         (ofGetHeight() - h2) / 2);
                             ofScale(w2/w1);
 
@@ -311,7 +324,7 @@ void ofApp::draw(){
     
     // DRAW BINARY DIGITS
   
-    float numberSpace = (ofGetHeight() - 40) / 4;
+    float numberSpace = (ofGetHeight()) / 4;
     ofRectangle zeroRect = canela.getStringBoundingBox("0", 0, 0);
     ofRectangle oneRect = canela.getStringBoundingBox("1", 0, 0);
 
@@ -324,16 +337,66 @@ void ofApp::draw(){
     ofNoFill();
     ofSetColor(255);
     
-    drawZero(0, 0);
-    drawZero(0, 1 * (numberSpace - zeroH * binScale));
-    drawZero(0, 2 * (numberSpace - zeroH * binScale));
-    drawZero(0, 3 * (numberSpace - zeroH * binScale));
+    ofTranslate(0, (ofGetHeight() - ((numberSpace * 4) + (zeroH * 4)) / 2) + 40);
     
     
-    drawZero(ofGetWidth()/2 - zeroW - 105, 0);
-    drawZero(ofGetWidth()/2 - zeroW - 105, 1 * (numberSpace - zeroH * binScale));
-    drawZero(ofGetWidth()/2 - zeroW - 105, 2 * (numberSpace - zeroH * binScale));
-    drawZero(ofGetWidth()/2 - zeroW - 105, 3 * (numberSpace - zeroH * binScale));
+    
+    if(keyDown && base[7]) {
+        drawOne(0, 0);
+    } else {
+        drawZero(0, 0);
+    }
+    
+    
+    if(keyDown && base[6]) {
+        drawOne(0, 1 * (numberSpace - zeroH * binScale));
+    } else {
+        drawZero(0, 1 * (numberSpace - zeroH * binScale));
+    }
+    
+    
+    if(keyDown && base[5]) {
+        drawOne(0, 2 * (numberSpace - zeroH * binScale));
+    } else {
+        drawZero(0, 2 * (numberSpace - zeroH * binScale));
+    }
+    
+    
+    
+    if(keyDown && base[4]) {
+        drawOne(0, 3 * (numberSpace - zeroH * binScale));
+    } else {
+        drawZero(0, 3 * (numberSpace - zeroH * binScale));
+    }
+    
+    
+    if(keyDown && base[3]) {
+        drawOne(ofGetWidth()/2 - 165, 0);
+    } else {
+        drawZero(ofGetWidth()/2 - 165, 0);
+    }
+    
+    
+    if(keyDown && base[2]) {
+        drawOne(ofGetWidth()/2 - 165, 1 * (numberSpace - zeroH * binScale));
+    } else {
+        drawZero(ofGetWidth()/2 - 165, 1 * (numberSpace - zeroH * binScale));
+    }
+    
+    
+    if(keyDown && base[1]) {
+        drawOne(ofGetWidth()/2 - 165, 2 * (numberSpace - zeroH * binScale));
+    } else {
+        drawZero(ofGetWidth()/2 - 165, 2 * (numberSpace - zeroH * binScale));
+    }
+    
+        
+        
+    if(keyDown && base[0]) {
+        drawOne(ofGetWidth()/2 - 165, 3 * (numberSpace - zeroH * binScale));
+    } else {
+        drawZero(ofGetWidth()/2 - 165, 3 * (numberSpace - zeroH * binScale));
+    }
         
     
     

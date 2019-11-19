@@ -83,14 +83,14 @@ class ofApp : public ofBaseApp{
     float archiveImgWidth; // width of archive img
     float shapeSizeSin; // animate shape in archive img
     float shapeSize; // size of shape for archive img
-     
-    
+      
     float w1; // img original size
     float h1;
     float w2; // img new size
     float h2;
-    
+    float margin;
      
+    
     // FONTS + BINARY 
     ofTrueTypeFont canelaThin;
     ofTrueTypeFont canela;
