@@ -15,11 +15,13 @@ void ofApp::setup(){
             ofImage img;
             archiveImages.push_back(img);
             archiveImages.back().load(archive.getPath(i));
+           
          
             // get random positions and sizes for archive photos
-            posX.push_back(ofRandom(10,ofGetWidth()/2 ));
-            posY.push_back(ofRandom(10, ofGetHeight() - 20));
-            scales.push_back(ofRandom(0.05, 0.2));
+            scales.push_back(ofRandom(0.02, 0.15));
+            posX.push_back(ofRandom(5,ofGetWidth()/2 - (archiveImages[i].getWidth() * scales[i]) - 5 ));
+            posY.push_back(ofRandom(5, ofGetHeight() - (archiveImages[i].getHeight() * scales[i]) - 5 ));
+              
         
             // get random numbers for visual treatments
             randomCircSizeBig.push_back(ofRandom(6));
@@ -29,6 +31,9 @@ void ofApp::setup(){
             
             focus.push_back(0); 
             reverseFocus.push_back(ofMap(focus[i], 0, 3, 5, 3));
+            opacity.push_back(255);
+        
+             
     }
     
     
@@ -46,9 +51,7 @@ void ofApp::draw(){
     ofBackground(0);
     
      
-     
-    
-     
+      
     
     
 //    cout << focus << endl;
@@ -77,41 +80,56 @@ void ofApp::draw(){
     
      
     // counter for fading animation
+    
     if (keyDown) {
 //        focus[keyNumber] = 20;
         
-       for (int i = 0; i < numPhotos; i++) {
-           focus[keyNumber] += 0.01;
+            for (int i = 0; i < numPhotos; i++) {
+           
+               // FADE IN
+               
+               focus[keyNumber] += 0.01;
+               
+               opacity[keyNumber] -= 1;
 
-           if (focus[keyNumber] > 3) {
-               focus[keyNumber] = 3;
+               if (focus[keyNumber] > 3) {
+                   focus[keyNumber] = 3;
+                   
+               }
+               
+               
            }
-           
-           
-       }
 
-         
-    } else {
+        // GET NEW RANDOM POSITION ON RELEASE
         
-        for (int i = 0; i < numPhotos; i++) {
-            focus[i] -= 0.1;
- 
-            if (focus[i] < 0) {
-                focus[i] = 0;
-            }
-//
-//            posX[keyNumber] =  ofRandom(10,ofGetWidth()/2 );
-//            posY[keyNumber] = ofRandom(10, ofGetHeight() - 20);
-            
-        }
+        posX[keyNumber] =  ofRandom(10,ofGetWidth()/2 - (archiveImages[keyNumber].getWidth() * scales[keyNumber]) - 10 );
+        posY[keyNumber] = ofRandom(10, ofGetHeight() - 20);
+        scales[keyNumber] = ofRandom(0.05, 0.2);
          
     }
     
+//    else {
+        
+        for (int i = 0; i < numPhotos; i++) {
+            
+            // FADE OUT
+            focus[i] -= 0.04;
+             
+ 
+                if (focus[i] < 0) {
+                    focus[i] = 0;
+                }
+            
+            opacity[keyNumber] += 1;
+            
+             
+            
+        }
+         
+//    }
+    
      
-    
-    cout << focus[keyNumber] << endl;
-//     cout << keyNumber << endl;
-    
+ 
  
      
     
@@ -134,9 +152,8 @@ void ofApp::draw(){
                
         
             // IF KEY NUMBER IS NOT BEING RECALLED, DRAW RANDOM POS X Y AND SIZE W H
-        
-//              if (keyNumber != i+1) {
-                if(focus[i+1] == 0) {
+ 
+                if(focus[i] == 0) {
                        archiveImgHeight = h1;
                        archiveImgWidth = w1;
                 
@@ -153,13 +170,40 @@ void ofApp::draw(){
                         randomRot = ofRandom(360);
                         lineX = shapeSize/2;
                         lineY = ofRandom(1, shapeSize/2 + reverseFocus[i]);
+                    
+                    
+                         for(int x = 0; x < archiveImgWidth; x += step) {
+                             for(int y = 0; y < archiveImgHeight; y += step) {
+                                  
+                                 
+                                ofColor c = archiveImages[i].getColor(x, y);
+                                 
+                                   
+                                if (focus[i] == 0) { // IF NOT BEING RECALLED, DRAW ARCHIVE
+
+                                    ofFill();
+                                    ofSetColor(c);
+                                    ofSetLineWidth(lineT);
+                                    
+                                    ofDrawLine(
+                                          x,
+                                          y,
+                                          x + lineX,
+                                          y + lineY);
+        //
+                                    }
+              
+                                } //end for y
+                         } // end for x
+                    
+                    ofPopMatrix();
                         
-                       }
+                }
         
         
         
 //             IF KEY NUMBER IS BEING RECALLED, DRAW ON RIGHT SIDE
-            else {
+                if(focus[i] > 0) {
                         archiveImgWidth = archiveImages[i].getWidth();
                         archiveImgHeight = archiveImages[i].getHeight();
 
@@ -178,112 +222,60 @@ void ofApp::draw(){
 
                         lineX = shapeSize*2;
                         lineY = shapeSize*2;
+                    
+                    
 
-                       }
+                         for(int x = 0; x < archiveImgWidth; x += step) {
+                             for(int y = 0; y < archiveImgHeight; y += step) {
+                                  
+                                 
+                                ofColor c = archiveImages[i].getColor(x, y);
+                                  
+                                if (focus[i] > 0) { // IF BEING RECALLED, DRAW ON RIGHT
 
+                                    ofFill();
+                                    ofSetColor(c);
+                                    ofDrawCircle(x + ofRandom(1),
+                                    y + ofRandom(1),
+                                    focus[i] );
+
+                                }
+              
+                                } //end for y
+                         } // end for x
+                    
+                    ofPopMatrix();
+ 
+                }
+
+         
+        
+         
         
         
-            // DRAW ALL PIXELS PER IMG
-            for(int x = 0; x < archiveImgWidth; x += step) {
-                 for(int y = 0; y < archiveImgHeight; y += step) {
-                      
-                     
-                    ofColor c = archiveImages[i].getColor(x, y);
-                     
-
-//                             if (keyNumber != i+1) { // IF NOT BEING RECALLED, DRAW ARCHIVE
-//
-//                                        ofFill();
-//                                        ofSetColor(c);
-//                                        ofSetLineWidth(lineT);
-//
-//                                        ofDrawLine(
-//                                                x,
-//                                                y,
-//                                                x + lineX,
-//                                                y + lineY);
-//
-//
-//
-//                             }
-//                             else { // IF BEING RECALLED, DRAW ON RIGHT
-//
-//
-//                                ofFill();
-//                                ofSetColor(c);
-//                                ofDrawCircle(x,
-//                                y,
-//                                2 );
-//
-//                             }
-                     
-                     
-                     
-                     if (focus[i+1] == 0) { // IF BEING RECALLED, DRAW ON RIGHT
-
-                        
-                        ofFill();
-                        ofSetColor(c);
-                        ofSetLineWidth(lineT);
-
-                        ofDrawLine(
-                              x,
-                              y,
-                              x + lineX,
-                              y + lineY);
-
-                     }
-                     
-                     
-                     else if (focus[i+1] > 0) { // IF NOT BEING RECALLED, DRAW ARCHIVE
-                  
-                        
-                        ofFill();
-                        ofSetColor(c);
-                        ofDrawCircle(x,
-                        y,
-                        focus[i+1] );
-                 
-                         
-                 
-                 
-                 
-             }
-
-                     
-                     
-                      
-                     
-                     
-                     
-                     
-                     
-                     
-                                      
-                                                 
-                     //                // DRAW WHITE RECT UNDER IMG
-                     //                ofSetColor(255);
-                     //                ofDrawRectangle((ofGetWidth() / 2) + 50,
-                     //                                (ofGetHeight() - h2) / 2,
-                     //                                w2,
-                     //                                h2);
-                     //
-                     //
-                     //                // DRAW FULL NON-PIXEL IMG
-                     //                archiveImages[i].draw(
-                     //                                      (ofGetWidth() / 2) + 50,
-                     //                                      (ofGetHeight() - h2) / 2,
-                     //                                      w2,
-                     //                                      h2);
-                     //
-     
-                     
-  
-                    } //end for y
-             } // end for x
-           
         
+//         DRAW PORTAL IN PLACE OF ARCHIVE IMG
+        
+        ofPushMatrix();
+
+            ofTranslate(posX[i], posY[i]);
+            ofScale(scales[i]);
+
+            if (focus[i] > 0) {
+
+
+                float circleX = 0 + w1 / 2;
+                float circleY = 0 + h1 / 2;
+                float rad = w1 / 2;
+
+                ofDrawCircle(circleX,
+                             circleY,
+                             rad);
+                }
+
         ofPopMatrix();
+        
+         
       
          
     } // end for i
@@ -364,10 +356,7 @@ void ofApp::keyReleased(int key){
            base[7] = false;
        }
     
-
-    //    keyNumber = 0;
-    //    keyImageGrow = 2;
-         
+ 
 
 }
 
@@ -415,3 +404,28 @@ void ofApp::gotMessage(ofMessage msg){
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
 }
+
+
+
+
+
+
+
+                                       
+                //                // DRAW WHITE RECT UNDER IMG
+                //                ofSetColor(255);
+                //                ofDrawRectangle((ofGetWidth() / 2) + 50,
+                //                                (ofGetHeight() - h2) / 2,
+                //                                w2,
+                //                                h2);
+                //
+                //
+                //                // DRAW FULL NON-PIXEL IMG
+                //                archiveImages[i].draw(
+                //                                      (ofGetWidth() / 2) + 50,
+                //                                      (ofGetHeight() - h2) / 2,
+                //                                      w2,
+                //                                      h2);
+                //
+
+                

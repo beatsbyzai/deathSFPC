@@ -53,8 +53,11 @@ class ofApp : public ofBaseApp{
     float numRetrievals = 0; // # of times images have been retreived  
     vector <float> retreivedImg; // store keyNumbers
     vector <float> focus; // store seconds pressed per img
-    vector <float> reverseFocus; // store reverse focus 
+    vector <float> reverseFocus; // store reverse values to focus
+    vector <float> opacity; // store 0 - 255 based on focus
     
+    
+    float time = ofGetElapsedTimef();
     
     // ANIMATOR VARIABLES 
     float step; // frequency of shapes to draw img
@@ -68,7 +71,7 @@ class ofApp : public ofBaseApp{
     bool base[8];
     int numPressed;
     int keyImageGrow;
-    int keyNumber;
+    int keyNumber; 
      
     // ARCHIVE VARIABLES
     float numPhotos; // number of photos in archive
