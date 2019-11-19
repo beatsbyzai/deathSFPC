@@ -1,7 +1,39 @@
 #include "ofApp.h"
 
+
+
+//--------------------------------------------------------------
+void ofApp::drawZero(float x, float y) {
+   
+         
+        vector <ofPath> zero = canela.getStringAsPoints("0", true, false);
+        for(int z = 0; z < zero.size(); z++) {
+            vector < ofPolyline > zeroLines = zero[z].getOutline();
+            
+            for(int i = 0; i < zeroLines.size(); i++) {
+                          ofPushMatrix();
+                            ofTranslate((ofGetWidth() / 2) + 50, 0); // translate to right side
+                            ofTranslate(x, y); // variables
+                            ofScale(binScale);
+                            zeroLines[i].draw();
+                          ofPopMatrix();
+                        }
+            
+        }
+        
+        
+    
+}
+
+
+
+
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
+    
+    canelaThin.load("canela-thin.ttf", 120, true, true, true);
+    canela.load("canela.ttf", 120, true, true, true);
     
     // create new directory of images
     archive.listDir("archive");
@@ -18,9 +50,9 @@ void ofApp::setup(){
            
          
             // get random positions and sizes for archive photos
-            scales.push_back(ofRandom(0.02, 0.15));
-            posX.push_back(ofRandom(5,ofGetWidth()/2 - (archiveImages[i].getWidth() * scales[i]) - 5 ));
-            posY.push_back(ofRandom(5, ofGetHeight() - (archiveImages[i].getHeight() * scales[i]) - 5 ));
+            scales.push_back(ofRandom(0.015, 0.12));
+            posX.push_back(ofRandom(10,ofGetWidth()/2 - (archiveImages[i].getWidth() * scales[i]) - 10));
+            posY.push_back(ofRandom(10, ofGetHeight() - (archiveImages[i].getHeight() * scales[i]) -  10 ));
               
         
             // get random numbers for visual treatments
@@ -69,7 +101,7 @@ void ofApp::draw(){
 
 // GET NUMBER IN BINARY ————————————————————————————————————————————————————
     
-    // calculate which keys are pressed through keyNumber
+    // CALCULATE WHICH KEYS ARE PRESSED THRU keyNumber
     keyNumber = 0;
     
     for(int i = 0; i < 8; i++) {
@@ -79,56 +111,47 @@ void ofApp::draw(){
     }
     
      
-    // counter for fading animation
+    // COUNTER FOR FADING ANIMATION
     
     if (keyDown) {
-//        focus[keyNumber] = 20;
         
             for (int i = 0; i < numPhotos; i++) {
            
-               // FADE IN
+               // FADE IN PHOTOS
                
-               focus[keyNumber] += 0.01;
-               
-               opacity[keyNumber] -= 1;
+               focus[keyNumber] += 0.005;
 
                if (focus[keyNumber] > 3) {
                    focus[keyNumber] = 3;
-                   
                }
                
                
            }
 
-        // GET NEW RANDOM POSITION ON RELEASE
+            // GET NEW RANDOM POSITION ON RELEASE
+            
+            posX[keyNumber] =  ofRandom(10,ofGetWidth()/2 - (archiveImages[keyNumber].getWidth() * scales[keyNumber]) - 10 );
+            posY[keyNumber] = ofRandom(10, ofGetHeight() - (archiveImages[keyNumber].getHeight() * scales[keyNumber]) - 10);
+            scales[keyNumber] = ofRandom(0.015, 0.12);
+
         
-        posX[keyNumber] =  ofRandom(10,ofGetWidth()/2 - (archiveImages[keyNumber].getWidth() * scales[keyNumber]) - 10 );
-        posY[keyNumber] = ofRandom(10, ofGetHeight() - 20);
-        scales[keyNumber] = ofRandom(0.05, 0.2);
-         
     }
-    
-//    else {
+     
         
         for (int i = 0; i < numPhotos; i++) {
             
-            // FADE OUT
+            // FADE OUT IMG
             focus[i] -= 0.04;
              
  
                 if (focus[i] < 0) {
                     focus[i] = 0;
                 }
-            
-            opacity[keyNumber] += 1;
-            
              
-            
+             
         }
-         
-//    }
-    
-     
+ 
+    cout << focus[1] << endl;
  
  
      
@@ -153,7 +176,7 @@ void ofApp::draw(){
         
             // IF KEY NUMBER IS NOT BEING RECALLED, DRAW RANDOM POS X Y AND SIZE W H
  
-                if(focus[i] == 0) {
+                if(focus[i] < 3) {
                        archiveImgHeight = h1;
                        archiveImgWidth = w1;
                 
@@ -169,7 +192,7 @@ void ofApp::draw(){
                         lineT = ofRandom(3);
                         randomRot = ofRandom(360);
                         lineX = shapeSize/2;
-                        lineY = ofRandom(1, shapeSize/2 + reverseFocus[i]);
+                        lineY = ofRandom(1, shapeSize/2);
                     
                     
                          for(int x = 0; x < archiveImgWidth; x += step) {
@@ -189,8 +212,10 @@ void ofApp::draw(){
                                           x,
                                           y,
                                           x + lineX,
-                                          y + lineY);
-        //
+                                          y + lineY - (3 - focus[i]) );
+//
+                                     
+                                    
                                     }
               
                                 } //end for y
@@ -237,7 +262,7 @@ void ofApp::draw(){
                                     ofSetColor(c);
                                     ofDrawCircle(x + ofRandom(1),
                                     y + ofRandom(1),
-                                    focus[i] );
+                                    focus[i] - ofRandom(1) + ofRandom(1));
 
                                 }
               
@@ -256,24 +281,24 @@ void ofApp::draw(){
         
 //         DRAW PORTAL IN PLACE OF ARCHIVE IMG
         
-        ofPushMatrix();
-
-            ofTranslate(posX[i], posY[i]);
-            ofScale(scales[i]);
-
-            if (focus[i] > 0) {
-
-
-                float circleX = 0 + w1 / 2;
-                float circleY = 0 + h1 / 2;
-                float rad = w1 / 2;
-
-                ofDrawCircle(circleX,
-                             circleY,
-                             rad);
-                }
-
-        ofPopMatrix();
+//        ofPushMatrix();
+//
+//            ofTranslate(posX[i], posY[i]);
+//            ofScale(scales[i]);
+//
+//            if (focus[i] > 0) {
+//
+//
+//                float circleX = 0 + w1 / 2;
+//                float circleY = 0 + h1 / 2;
+//                float rad = w1 / 2;
+//
+//                ofDrawCircle(circleX,
+//                             circleY,
+//                             rad);
+//                }
+//
+//        ofPopMatrix();
         
          
       
@@ -281,8 +306,149 @@ void ofApp::draw(){
     } // end for i
  
      
- 
     
+    
+    
+    // DRAW BINARY DIGITS
+  
+    float numberSpace = (ofGetHeight() - 40) / 4;
+    ofRectangle zeroRect = canela.getStringBoundingBox("0", 0, 0);
+    ofRectangle oneRect = canela.getStringBoundingBox("1", 0, 0);
+
+    float zeroW = zeroRect.width;
+    float zeroH = zeroRect.height;
+    float oneW = oneRect.width;
+    float oneH = oneRect.height;
+    
+    
+    ofNoFill();
+    ofSetColor(255);
+    
+    drawZero(0, 0);
+    drawZero(0, 1 * (numberSpace - zeroH * binScale));
+    drawZero(0, 2 * (numberSpace - zeroH * binScale));
+    drawZero(0, 3 * (numberSpace - zeroH * binScale));
+    
+    
+    drawZero(ofGetWidth()/2 - zeroW - 105, 0);
+    drawZero(ofGetWidth()/2 - zeroW - 105, 1 * (numberSpace - zeroH * binScale));
+    drawZero(ofGetWidth()/2 - zeroW - 105, 2 * (numberSpace - zeroH * binScale));
+    drawZero(ofGetWidth()/2 - zeroW - 105, 3 * (numberSpace - zeroH * binScale));
+        
+    
+    
+    
+    
+    
+//        ofPushMatrix();
+    
+//            // 0,0
+//            for(int i = 0; i < zeroLines.size(); i++) {
+//              ofPushMatrix();
+//                ofTranslate((ofGetWidth() / 2) + 50, 100);
+//
+//                ofTranslate(0, 0);
+//                ofScale(0.5);
+//                zeroLines[i].draw();
+//              ofPopMatrix();
+//            }
+//
+//
+//            // 0,1
+//            for(int i = 0; i < zero.size(); i++) {
+//            ofPushMatrix();
+//                ofTranslate((ofGetWidth() / 2) + 50, 100);
+//              ofTranslate(0, 1 * (numberSpace - zeroH));
+//                ofScale(0.5);
+//                  zero[i].draw();
+//            ofPopMatrix();
+//            }
+//
+//
+//            // 0,2
+//            for(int i = 0; i < zero.size(); i++) {
+//            ofPushMatrix();
+//                ofTranslate((ofGetWidth() / 2) + 50, 100);
+//
+//              ofTranslate(0, 2 * (numberSpace - zeroH));
+//                ofScale(0.5);
+//                  zero[i].draw();
+//            ofPopMatrix();
+//            }
+//
+//
+//            // 0,3
+//            for(int i = 0; i < zero.size(); i++) {
+//            ofPushMatrix();
+//                ofTranslate((ofGetWidth() / 2) + 50, 100);
+//              ofTranslate(0, 3 * (numberSpace - zeroH));
+//                ofScale(0.5);
+//                  zero[i].draw();
+//            ofPopMatrix();
+//            }
+//
+    
+    
+    
+    
+    
+    
+    
+//        // (1,1)
+//        canela.drawString(
+//        "0",
+//        0,
+//        0 * (numberSpace - zeroH));
+//
+//        // (1,2)
+//        canela.drawString(
+//        "0",
+//        0,
+//        1 * (numberSpace - zeroH));
+//
+//        // (1,3)
+//        canela.drawString(
+//        "0",
+//        0,
+//        2 * (numberSpace - zeroH));
+//
+//        // (1,4)
+//        canela.drawString(
+//        "0",
+//        0,
+//        3 * (numberSpace - zeroH));
+//
+//        // (2,1)
+//        canela.drawString(
+//        "0",
+//        ofGetWidth()/2 - zeroW,
+//        0 * (numberSpace - zeroH));
+//
+//        // (2,2)
+//        canela.drawString(
+//        "0",
+//        ofGetWidth()/2 - zeroW,
+//        1 * (numberSpace - zeroH));
+//
+//        // (2,3)
+//        canela.drawString(
+//        "0",
+//        ofGetWidth()/2 - zeroW,
+//        2 * (numberSpace - zeroH));
+//
+//        // (2,4)
+//        canela.drawString(
+//        "0",
+//        ofGetWidth()/2 - zeroW - 105,
+//        3 * (numberSpace - zeroH));
+//
+    
+    
+    
+    
+    ofPopMatrix();
+     
+     
     
     
 }

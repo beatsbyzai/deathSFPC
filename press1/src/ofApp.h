@@ -20,7 +20,11 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		
+    
+    void drawZero(float x, float y);
+	void drawOne(float x, float y);
+    
+    
     
     ofDirectory archive;
     vector <ofImage> archiveImages;
@@ -87,7 +91,10 @@ class ofApp : public ofBaseApp{
     float h2;
     
      
-     
+    // FONTS + BINARY 
+    ofTrueTypeFont canelaThin;
+    ofTrueTypeFont canela;
+    float binScale = 0.6;
     
     
     
