@@ -141,12 +141,14 @@ void ofApp::draw(){
                
                
            }
-
-            // GET NEW RANDOM POSITION ON RELEASE
-            
-            posX[keyNumber] =  ofRandom(10,ofGetWidth()/2 - (archiveImages[keyNumber].getWidth() * scales[keyNumber]) - 10 );
-            posY[keyNumber] = ofRandom(10, ofGetHeight() - (archiveImages[keyNumber].getHeight() * scales[keyNumber]) - 10);
-            scales[keyNumber] = ofRandom(0.015, 0.12);
+        
+            if (focus[keyNumber] > 2.75) {
+                // GET NEW RANDOM POSITION ON RELEASE
+                
+                posX[keyNumber] =  ofRandom(10,ofGetWidth()/2 - (archiveImages[keyNumber].getWidth() * scales[keyNumber]) - 10 );
+                posY[keyNumber] = ofRandom(10, ofGetHeight() - (archiveImages[keyNumber].getHeight() * scales[keyNumber]) - 10);
+                scales[keyNumber] = ofRandom(0.015, 0.12);
+            }
 
         
     }
@@ -209,28 +211,43 @@ void ofApp::draw(){
                         lineY = ofRandom(1, shapeSize/2);
                     
                     
-                         for(int x = 0; x < archiveImgWidth; x += step * 1.5) {
-                             for(int y = 0; y < archiveImgHeight; y += step * 1.5) {
-
+//                         for(int x = 0; x < archiveImgWidth; x += step * 1.5) {
+//                             for(int y = 0; y < archiveImgHeight; y += step * 1.5) {
+                    for(int x = 0; x < archiveImgWidth; x += step) {
+                        for(int y = 0; y < archiveImgHeight; y += step) {
 
                                 ofColor c = archiveImages[i].getColor(x, y);
 
-
-                                if (focus[i] == 0) { // IF NOT BEING RECALLED, DRAW ARCHIVE
+ 
 
                                     ofFill();
                                     ofSetColor(c);
                                     ofSetLineWidth(lineT);
 
-                                    ofDrawLine(
-                                          x,
-                                          y,
-                                          x + lineX,
-                                          y + lineY - (3 - focus[i]) );
+                            
+                            
+                            
+                                    if (focus[i] > 0) {
+                                        ofDrawLine(
+                                        x,
+                                        y,
+                                        x + (3 - focus[i]),
+                                        y + (3 - focus[i]) );
+                                    
+                                        
+                                        
+                                        
+                                    } else {
+                                        
+                                        ofDrawLine(
+                                             x,
+                                             y,
+                                             x + lineX,
+                                             y + lineY +  (3 - focus[i]) );
+                                    }
 //
 
-
-                                    }
+ 
 
                                 } //end for y
                          } // end for x
@@ -269,16 +286,13 @@ void ofApp::draw(){
                                   
                                  
                                 ofColor c = archiveImages[i].getColor(x, y);
-                                  
-                                if (focus[i] > 0) { // IF BEING RECALLED, DRAW ON RIGHT
-
+                                   
                                     ofFill();
                                     ofSetColor(c);
                                     ofDrawCircle(x + ofRandom(1),
                                     y + ofRandom(1),
                                     focus[i] - ofRandom(1) + ofRandom(1));
-
-                                }
+ 
               
                                 } //end for y
                          } // end for x
@@ -295,25 +309,26 @@ void ofApp::draw(){
         
 //         DRAW PORTAL IN PLACE OF ARCHIVE IMG
         
-//        ofPushMatrix();
-//
-//            ofTranslate(posX[i], posY[i]);
-//            ofScale(scales[i]);
-//
-//            if (focus[i] > 0) {
-//
-//
-//                float circleX = 0 + w1 / 2;
-//                float circleY = 0 + h1 / 2;
-//                float rad = w1 / 2;
-//
-//                ofDrawCircle(circleX,
-//                             circleY,
-//                             rad);
-//                }
-//
-//        ofPopMatrix();
-        
+        ofPushMatrix();
+
+            ofTranslate(posX[i], posY[i]);
+            ofScale(scales[i]);
+
+            if (focus[i] > 0) {
+
+
+                float circleX = 0 + w1 / 2;
+                float circleY = 0 + h1 / 2;
+                float rad = w1 / 2;
+
+                ofNoFill();
+                ofDrawCircle(circleX,
+                             circleY,
+                             rad);
+                }
+
+        ofPopMatrix();
+
          
       
          
