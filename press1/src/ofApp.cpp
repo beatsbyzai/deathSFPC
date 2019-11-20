@@ -5,7 +5,7 @@
 //--------------------------------------------------------------
 void ofApp::drawZero(float x, float y) {
          
-        vector <ofPath> zero = canela.getStringAsPoints("0", true, false);
+        vector <ofPath> zero = canela.getStringAsPoints("I", true, false);
         for(int z = 0; z < zero.size(); z++) {
             vector < ofPolyline > zeroLines = zero[z].getOutline();
             
@@ -24,7 +24,7 @@ void ofApp::drawZero(float x, float y) {
 //--------------------------------------------------------------
 void ofApp::drawOne(float x, float y) {
          
-        vector <ofPath> one = canela.getStringAsPoints("1", true, false);
+        vector <ofPath> one = canela.getStringAsPoints("II", true, false);
         for(int o = 0; o < one.size(); o++) {
             vector < ofPolyline > oneLines = one[o].getOutline();
             
@@ -95,6 +95,7 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(0);
     
+      
      
       
     
@@ -208,29 +209,29 @@ void ofApp::draw(){
                         lineY = ofRandom(1, shapeSize/2);
                     
                     
-                         for(int x = 0; x < archiveImgWidth; x += step) {
-                             for(int y = 0; y < archiveImgHeight; y += step) {
-                                  
-                                 
+                         for(int x = 0; x < archiveImgWidth; x += step * 1.5) {
+                             for(int y = 0; y < archiveImgHeight; y += step * 1.5) {
+
+
                                 ofColor c = archiveImages[i].getColor(x, y);
-                                 
-                                   
+
+
                                 if (focus[i] == 0) { // IF NOT BEING RECALLED, DRAW ARCHIVE
 
                                     ofFill();
                                     ofSetColor(c);
                                     ofSetLineWidth(lineT);
-                                    
+
                                     ofDrawLine(
                                           x,
                                           y,
                                           x + lineX,
                                           y + lineY - (3 - focus[i]) );
 //
-                                     
-                                    
+
+
                                     }
-              
+
                                 } //end for y
                          } // end for x
                     
