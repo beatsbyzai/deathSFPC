@@ -41,6 +41,7 @@ class ofApp : public ofBaseApp{
     vector <float> randomCircSizeSmall;
     vector <float> randomSinStart;
     vector <int> randomShapeNum;
+    vector <float> randomPixelSpacing;
     
     
     // REMEMBER PREVIOUS IMGS

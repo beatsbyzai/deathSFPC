@@ -73,6 +73,7 @@ void ofApp::setup(){
             randomCircSizeSmall.push_back(ofRandom(2));
             randomSinStart.push_back(ofRandom(20));
             randomShapeNum.push_back(ofRandom(1,2));
+            randomPixelSpacing.push_back(ofRandom(1,3));
             
             focus.push_back(0); 
             reverseFocus.push_back(ofMap(focus[i], 0, 3, 5, 3));
@@ -95,8 +96,8 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(0);
     
-      
      
+    ofDrawLine(ofGetWidth() / 2 , 0, ofGetWidth() / 2, ofGetHeight());
       
     
     
@@ -117,6 +118,8 @@ void ofApp::draw(){
     
     // CALCULATE WHICH KEYS ARE PRESSED THRU keyNumber
     keyNumber = 0;
+    randomPixelSpacing[keyNumber] = 1;
+    
     
     for(int i = 0; i < 8; i++) {
         if (base[i]) {
@@ -132,7 +135,7 @@ void ofApp::draw(){
             for (int i = 0; i < numPhotos; i++) {
            
                // FADE IN PHOTOS
-               
+                
                focus[keyNumber] += 0.005;
 
                if (focus[keyNumber] > 3) {
@@ -142,12 +145,29 @@ void ofApp::draw(){
                
            }
         
+        
+        randomPixelSpacing[keyNumber] -= 1;
+        
+        if (randomPixelSpacing[keyNumber] < 1) {
+            randomPixelSpacing[keyNumber] = 1;
+        }
+        
+//        if (focus[keyNumber] > 0 && focus[keyNumber] < 2.75) {
+//            randomPixelSpacing[keyNumber] -= 1;
+//
+//            if (randomPixelSpacing[keyNumber] < 1) {
+//                randomPixelSpacing[keyNumber] = 1;
+//            }
+//        }
+        
             if (focus[keyNumber] > 2.75) {
                 // GET NEW RANDOM POSITION ON RELEASE
                 
                 posX[keyNumber] =  ofRandom(10,ofGetWidth()/2 - (archiveImages[keyNumber].getWidth() * scales[keyNumber]) - 10 );
                 posY[keyNumber] = ofRandom(10, ofGetHeight() - (archiveImages[keyNumber].getHeight() * scales[keyNumber]) - 10);
                 scales[keyNumber] = ofRandom(0.015, 0.12);
+                randomPixelSpacing[keyNumber] = ofRandom(1,3);
+                
             }
 
         
@@ -213,8 +233,8 @@ void ofApp::draw(){
                     
 //                         for(int x = 0; x < archiveImgWidth; x += step * 1.5) {
 //                             for(int y = 0; y < archiveImgHeight; y += step * 1.5) {
-                    for(int x = 0; x < archiveImgWidth; x += step) {
-                        for(int y = 0; y < archiveImgHeight; y += step) {
+                    for(int x = 0; x < archiveImgWidth; x += step * randomPixelSpacing[i]) {
+                        for(int y = 0; y < archiveImgHeight; y += step * randomPixelSpacing[i]) {
 
                                 ofColor c = archiveImages[i].getColor(x, y);
 
@@ -307,7 +327,7 @@ void ofApp::draw(){
         
         
         
-//         DRAW PORTAL IN PLACE OF ARCHIVE IMG
+        // DRAW PORTAL IN PLACE OF ARCHIVE IMG
         
         ofPushMatrix();
 
@@ -322,6 +342,7 @@ void ofApp::draw(){
                 float rad = w1 / 2;
 
                 ofNoFill();
+                ofSetLineWidth(focus[i] * scales[i]);
                 ofDrawCircle(circleX,
                              circleY,
                              rad);
@@ -355,7 +376,7 @@ void ofApp::draw(){
     
     ofTranslate(0, (ofGetHeight() - ((numberSpace * 4) + (zeroH * 4)) / 2) + 40);
     
-    
+     
     
     if(keyDown && base[7]) {
         drawOne(0, 0);
@@ -387,31 +408,31 @@ void ofApp::draw(){
     
     
     if(keyDown && base[3]) {
-        drawOne(ofGetWidth()/2 - 165, 0);
+        drawOne(((ofGetWidth() / 2) - 250/2), 0);
     } else {
-        drawZero(ofGetWidth()/2 - 165, 0);
+        drawZero(((ofGetWidth() / 2) - 250/2 + 20), 0);
     }
     
     
     if(keyDown && base[2]) {
-        drawOne(ofGetWidth()/2 - 165, 1 * (numberSpace - zeroH * binScale));
+        drawOne(((ofGetWidth() / 2) - 250/2), 1 * (numberSpace - zeroH * binScale));
     } else {
-        drawZero(ofGetWidth()/2 - 165, 1 * (numberSpace - zeroH * binScale));
+        drawZero(((ofGetWidth() / 2) - 250/2), 1 * (numberSpace - zeroH * binScale));
     }
     
     
     if(keyDown && base[1]) {
-        drawOne(ofGetWidth()/2 - 165, 2 * (numberSpace - zeroH * binScale));
+        drawOne(((ofGetWidth() / 2) - 250/2), 2 * (numberSpace - zeroH * binScale));
     } else {
-        drawZero(ofGetWidth()/2 - 165, 2 * (numberSpace - zeroH * binScale));
+        drawZero(((ofGetWidth() / 2) - 250/2), 2 * (numberSpace - zeroH * binScale));
     }
     
         
         
     if(keyDown && base[0]) {
-        drawOne(ofGetWidth()/2 - 165, 3 * (numberSpace - zeroH * binScale));
+        drawOne(((ofGetWidth() / 2) - 250/2), 3 * (numberSpace - zeroH * binScale));
     } else {
-        drawZero(ofGetWidth()/2 - 165, 3 * (numberSpace - zeroH * binScale));
+        drawZero(((ofGetWidth() / 2) - 250/2), 3 * (numberSpace - zeroH * binScale));
     }
         
     
