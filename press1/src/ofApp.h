@@ -21,11 +21,22 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
+    
+    // BINARY DISPLAY SETUP
     void drawZero(float x, float y);
 	void drawOne(float x, float y);
     
+    // SERIAL SETUP
+    ofSerial serial;
+    char sendChar;
+    string receiveString;
+    string ofxGetSerialString(ofSerial &serial, char until);
+    string ofxTrimStringRight(string str);// trim right trailing spaces
+    string ofxTrimStringLeft(string str);// trim left trailing spaces
+    string ofxTrimString(string str);// trim trailing spaces
     
     
+    // ARCHIVE SETUP
     ofDirectory archive;
     vector <ofImage> archiveImages;
     ofImage image;
@@ -60,11 +71,11 @@ class ofApp : public ofBaseApp{
     vector <float> focus; // store seconds pressed per img
     vector <float> reverseFocus; // store reverse values to focus
     vector <float> opacity; // store 0 - 255 based on focus
+     
+     
     
-    
-    float time = ofGetElapsedTimef();
-    
-    // ANIMATOR VARIABLES 
+    // ANIMATOR VARIABLES
+    float time = ofGetElapsedTimef(); // time
     float step; // frequency of shapes to draw img
     float lineT; // random line thickness
     float lineX; // line width
@@ -74,9 +85,12 @@ class ofApp : public ofBaseApp{
     // KEY NUMBER COUNTER
     bool keyDown;
     bool base[8];
+    bool magDown;
+    bool magBase[8];
     int numPressed;
     int keyImageGrow;
-    int keyNumber; 
+    int keyNumber;
+    int magKeyNumber;
      
     // ARCHIVE VARIABLES
     float numPhotos; // number of photos in archive
