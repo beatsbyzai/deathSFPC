@@ -25,12 +25,16 @@ void ofApp::drawZero(float x, float y) {
 void ofApp::drawOne(float x, float y) {
          
         vector <ofPath> one = canela.getStringAsPoints("II", true, false);
+        ofRectangle oneRect = canela.getStringBoundingBox("1", 0, 0);
+    
+    
         for(int o = 0; o < one.size(); o++) {
             vector < ofPolyline > oneLines = one[o].getOutline();
             
+            
             for(int i = 0; i < oneLines.size(); i++) {
                           ofPushMatrix();
-                            ofTranslate((ofGetWidth() / 2) + 65, 0); // translate to right side
+                            ofTranslate((ofGetWidth() / 2) + 60 - (oneRect.width / 2), 0); // translate to right side
                             ofTranslate(x, y); // variables
                             ofScale(binScale);
                             oneLines[i].draw();
@@ -43,7 +47,7 @@ void ofApp::drawOne(float x, float y) {
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
+     
     // serial settings
     ofSetVerticalSync(true);
     ofSetLogLevel(OF_LOG_VERBOSE);
@@ -86,7 +90,7 @@ void ofApp::setup(){
             randomCircSizeSmall.push_back(ofRandom(2));
             randomSinStart.push_back(ofRandom(20));
             randomShapeNum.push_back(ofRandom(1,2));
-            randomPixelSpacing.push_back(ofRandom(1,5));
+            randomPixelSpacing.push_back(ofRandom(1,3));
             
             focus.push_back(0); 
             reverseFocus.push_back(ofMap(focus[i], 0, 3, 5, 3));
@@ -552,6 +556,8 @@ void ofApp::draw(){
     
     ofTranslate(0, (ofGetHeight() - ((numberSpace * 4) + (zeroH * 4)) / 2) + 40);
     
+    
+    ofSetLineWidth(1);
      
     
     if(keyDown && base[7]) {
@@ -584,7 +590,7 @@ void ofApp::draw(){
     
     
     if(keyDown && base[3]) {
-        drawOne(((ofGetWidth() / 2) - 250/2 + 20), 0);
+        drawOne(((ofGetWidth() / 2) - 250/2), 0);
     } else {
         drawZero(((ofGetWidth() / 2) - 250/2), 0);
     }

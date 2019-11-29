@@ -22,6 +22,18 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     
+    
+    
+    // INSTALLATION SETUP
+    
+    float leftW = 1280;
+    float leftH = 800;
+    float rightW = 1024;
+    float rightH = 768;
+    float fullWidth = leftW + rightW;
+    float fullHeight = leftH + rightH;
+    
+    
     // BINARY DISPLAY SETUP
     void drawZero(float x, float y);
 	void drawOne(float x, float y);
@@ -110,6 +122,7 @@ class ofApp : public ofBaseApp{
     ofTrueTypeFont canelaThin;
     ofTrueTypeFont canela;
     float binScale = 0.6;
+    
     
     
     
