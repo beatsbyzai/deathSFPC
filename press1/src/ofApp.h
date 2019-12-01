@@ -26,12 +26,12 @@ class ofApp : public ofBaseApp{
     
     // INSTALLATION SETUP
     
-    float leftW = 1280;
-    float leftH = 800;
-    float rightW = 1024;
-    float rightH = 768;
+    float leftW = 1080;
+    float leftH = 1920;
+    float rightW = 1074;
+    float rightH = 1432;
     float fullWidth = leftW + rightW;
-    float fullHeight = leftH + rightH;
+    float fullHeight = rightH;
     
     
     // BINARY DISPLAY SETUP
@@ -121,7 +121,7 @@ class ofApp : public ofBaseApp{
     // FONTS + BINARY 
     ofTrueTypeFont canelaThin;
     ofTrueTypeFont canela;
-    float binScale = 0.6;
+    float binScale = 1;
     
     
     

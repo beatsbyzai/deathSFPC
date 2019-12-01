@@ -6,12 +6,14 @@
 void ofApp::drawZero(float x, float y) {
          
         vector <ofPath> zero = canela.getStringAsPoints("I", true, false);
+        ofRectangle zeroRect = canela.getStringBoundingBox("0", 0, 0);
+    
         for(int z = 0; z < zero.size(); z++) {
             vector < ofPolyline > zeroLines = zero[z].getOutline();
             
             for(int i = 0; i < zeroLines.size(); i++) {
                           ofPushMatrix();
-                            ofTranslate((ofGetWidth() / 2) + 50, 0); // translate to right side
+                            ofTranslate((leftW ) + ((rightW - (rightW - margin)) / 2) - (zeroRect.width * binScale) - 10, 0); // translate to right side
                             ofTranslate(x, y); // variables
                             ofScale(binScale);
                             zeroLines[i].draw();
@@ -20,11 +22,13 @@ void ofApp::drawZero(float x, float y) {
         }
 }
 
+ 
 
 //--------------------------------------------------------------
 void ofApp::drawOne(float x, float y) {
          
         vector <ofPath> one = canela.getStringAsPoints("II", true, false);
+        ofRectangle zeroRect = canela.getStringBoundingBox("0", 0, 0);
         ofRectangle oneRect = canela.getStringBoundingBox("1", 0, 0);
     
     
@@ -34,7 +38,7 @@ void ofApp::drawOne(float x, float y) {
             
             for(int i = 0; i < oneLines.size(); i++) {
                           ofPushMatrix();
-                            ofTranslate((ofGetWidth() / 2) + 60 - (oneRect.width / 2), 0); // translate to right side
+                            ofTranslate((leftW ) + ((rightW - (rightW - margin)) / 2) - (zeroRect.width * binScale) - 10 - (oneRect.width / 2), 0); // translate to right side
                             ofTranslate(x, y); // variables
                             ofScale(binScale);
                             oneLines[i].draw();
@@ -48,6 +52,9 @@ void ofApp::drawOne(float x, float y) {
 //--------------------------------------------------------------
 void ofApp::setup(){
      
+    
+    ofSetFullscreen(true);
+    
     // serial settings
     ofSetVerticalSync(true);
     ofSetLogLevel(OF_LOG_VERBOSE);
@@ -80,17 +87,17 @@ void ofApp::setup(){
            
          
             // get random positions and sizes for archive photos
-            scales.push_back(ofRandom(0.010, 0.12));
-            posX.push_back(ofRandom(10, (ofGetWidth()/2 - ((archiveImages[i].getWidth() * scales[i]))) - 20));
-            posY.push_back(ofRandom(10, (ofGetHeight() - ((archiveImages[i].getHeight() * scales[i]))) -  10 ));
+            scales.push_back(ofRandom(0.005, 0.12));
+            posX.push_back(ofRandom(10 , (leftW - ((archiveImages[i].getWidth() * scales[i]))) - 20));
+            posY.push_back(ofRandom(10, (leftH - ((archiveImages[i].getHeight() * scales[i]))) -  10 ));
               
         
             // get random numbers for visual treatments
-            randomCircSizeBig.push_back(ofRandom(6));
-            randomCircSizeSmall.push_back(ofRandom(2));
+            randomCircSizeBig.push_back(ofRandom(4));
+            randomCircSizeSmall.push_back(ofRandom(1));
             randomSinStart.push_back(ofRandom(20));
             randomShapeNum.push_back(ofRandom(1,2));
-            randomPixelSpacing.push_back(ofRandom(1,3));
+            randomPixelSpacing.push_back(ofRandom(1,4));
             
             focus.push_back(0); 
             reverseFocus.push_back(ofMap(focus[i], 0, 3, 5, 3));
@@ -98,6 +105,36 @@ void ofApp::setup(){
         
              
     }
+    
+     
+      for (int i = 0; i < numPhotos; i++) {
+    
+              // load images from directory
+              ofImage img;
+              archiveImages.push_back(img);
+              archiveImages.back().load(archive.getPath(i));
+             
+           
+              // get random positions and sizes for archive photos
+              scales.push_back(ofRandom(0.005, 0.12));
+              posX.push_back(ofRandom(10 , (leftW - ((archiveImages[i].getWidth() * scales[i]))) - 20));
+              posY.push_back(ofRandom(10, (leftH - ((archiveImages[i].getHeight() * scales[i]))) -  10 ));
+                
+          
+              // get random numbers for visual treatments
+              randomCircSizeBig.push_back(ofRandom(4));
+              randomCircSizeSmall.push_back(ofRandom(1));
+              randomSinStart.push_back(ofRandom(20));
+              randomShapeNum.push_back(ofRandom(1,2));
+              randomPixelSpacing.push_back(ofRandom(1,4));
+              
+              focus.push_back(0);
+              reverseFocus.push_back(ofMap(focus[i], 0, 3, 5, 3));
+              opacity.push_back(255);
+          
+               
+      }
+      
     
     
 }
@@ -222,32 +259,16 @@ string ofApp::ofxTrimString(string str) {
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    
+    
+    
     ofBackground(0);
-    
-    
      
     ofSetColor(255);
-    ofSetLineWidth(1);
-    
-    ofDrawLine(ofGetWidth() / 2 , 0, ofGetWidth() / 2, ofGetHeight());
-      
-    cout << receiveString << endl;
-    
+       
     ofSetColor(255,0,0);
     
-    
-//    if (magBase[7]) {
-//        ofFill();
-//        ofDrawRectangle(ofGetWidth()/2, ofGetHeight()/2, 100, 100);
-//    } else if (magBase[7]  == false) {
-//        ofNoFill();
-//        ofDrawRectangle(ofGetWidth()/2, ofGetHeight()/2, 100, 100);
-//
-//    }
-
-        
- 
-    
+      
     
     
     int step;
@@ -265,7 +286,6 @@ void ofApp::draw(){
     
     // CALCULATE WHICH KEYS ARE PRESSED THRU keyNumber
     keyNumber = 0;
-    magKeyNumber = 0;
     randomPixelSpacing[keyNumber] = 1;
     
     
@@ -281,6 +301,14 @@ void ofApp::draw(){
              magKeyNumber += pow(2.0, i);
         }
     }
+    
+     
+    if(keyNumber == 128) {
+         keyNumber += 1;
+    }
+    
+    keyNumber = keyNumber % 128;
+     
     
      
     // COUNTER FOR FADING ANIMATION
@@ -318,10 +346,10 @@ void ofApp::draw(){
             if (focus[keyNumber] > 2.75) {
                 // GET NEW RANDOM POSITION ON RELEASE
                 
-                posX[keyNumber] =  ofRandom(10, (ofGetWidth()/2 - (archiveImages[keyNumber].getWidth() * scales[keyNumber])) - 10 );
-                posY[keyNumber] = ofRandom(10, (ofGetHeight() - (archiveImages[keyNumber].getHeight() * scales[keyNumber])) - 10);
-                scales[keyNumber] = ofRandom(0.015, 0.12);
-                randomPixelSpacing[keyNumber] = ofRandom(1,3);
+                posX[keyNumber] =  ofRandom(10, (leftW - (archiveImages[keyNumber].getWidth() * scales[keyNumber])) - 10 );
+                posY[keyNumber] = ofRandom(10, (leftH - (archiveImages[keyNumber].getHeight() * scales[keyNumber])) - 10);
+                scales[keyNumber] = ofRandom(0.005, 0.10);
+                randomPixelSpacing[keyNumber] = ofRandom(1,4);
                 
             }
 
@@ -358,10 +386,10 @@ void ofApp::draw(){
         
         ofPushMatrix();
          
-            margin = 250;
+            margin = 350;
             w1 = archiveImages[i].getWidth();
             h1 = archiveImages[i].getHeight();
-            w2 = (ofGetWidth() / 2) - margin;
+            w2 = rightW - margin;
             h2 = (w2 * h1) / w1;
                
         
@@ -440,8 +468,8 @@ void ofApp::draw(){
                         archiveImgHeight = archiveImages[i].getHeight();
 
                         ofPushMatrix();
-                            ofTranslate((ofGetWidth() / 2) + (margin/2),
-                                        (ofGetHeight() - h2) / 2);
+                            ofTranslate((leftW) + (margin/2),
+                                        (rightH - h2) / 2);
                             ofScale(w2/w1);
 
                         shapeSizeSin = sin((ofGetElapsedTimef() + randomSinStart[i]));
@@ -494,18 +522,16 @@ void ofApp::draw(){
 
             if (focus[i] > 0) {
 
-
-//                float circleX = w1 / 2;
-//                float circleY = h1 / 2;
-//                float rad = w1 / 2;
+ 
+//                for(int x = 0; x < w1 ; x++) {
+//                    ofDrawCircle(x, 0, (4 ) * focus[i]);
+//                    ofDrawCircle(x, h1, (4 ) * focus[i]);
+//                }
 //
-//                float xOrigin = circleX;
-//                float yOrigin = circleY;
-//
-//                ofDrawCircle(circleX,
-//                             circleY,
-//                             rad);
-                
+//                for(int y = 0; y < h1 ; y++) {
+//                    ofDrawCircle(0, y, (4 ) * focus[i]);
+//                    ofDrawCircle(w1, y, (4) * focus[i]);
+//                }
                 
                 for(int x = 0; x < 10; x++) {
                     float xOrig = w1 / 2;
@@ -541,7 +567,7 @@ void ofApp::draw(){
     
     // DRAW BINARY DIGITS
   
-    float numberSpace = (ofGetHeight()) / 4;
+    float numberSpace = (rightH) / 4;
     ofRectangle zeroRect = canela.getStringBoundingBox("0", 0, 0);
     ofRectangle oneRect = canela.getStringBoundingBox("1", 0, 0);
 
@@ -550,15 +576,26 @@ void ofApp::draw(){
     float oneW = oneRect.width;
     float oneH = oneRect.height;
     
+    float startMargin = numberSpace - (zeroH * binScale);
+    
     
     ofNoFill();
     ofSetColor(255);
-    
-    ofTranslate(0, (ofGetHeight() - ((numberSpace * 4) + (zeroH * 4)) / 2) + 40);
-    
-    
-    ofSetLineWidth(1);
      
+    ofTranslate(0, ((zeroH * 4) - zeroH / 2) );
+    
+     
+     
+    ofSetLineWidth(1);
+    
+    if(keyDown) {
+        ofSetLineWidth(ofRandom(3));
+    } else if(keyDown == false) {
+        ofSetLineWidth(1);
+    }
+     
+     
+    
     
     if(keyDown && base[7]) {
         drawOne(0, 0);
@@ -568,53 +605,53 @@ void ofApp::draw(){
     
     
     if(keyDown && base[6]) {
-        drawOne(0, 1 * (numberSpace - zeroH * binScale));
+        drawOne(0, 1 * (startMargin));
     } else {
-        drawZero(0, 1 * (numberSpace - zeroH * binScale));
+        drawZero(0, 1 * (startMargin));
     }
     
     
     if(keyDown && base[5]) {
-        drawOne(0, 2 * (numberSpace - zeroH * binScale));
+        drawOne(0, 2 * (startMargin));
     } else {
-        drawZero(0, 2 * (numberSpace - zeroH * binScale));
+        drawZero(0, 2 * (startMargin));
     }
     
     
     
     if(keyDown && base[4]) {
-        drawOne(0, 3 * (numberSpace - zeroH * binScale));
+        drawOne(0, 3 * (startMargin));
     } else {
-        drawZero(0, 3 * (numberSpace - zeroH * binScale));
+        drawZero(0, 3 * (startMargin));
     }
     
     
     if(keyDown && base[3]) {
-        drawOne(((ofGetWidth() / 2) - 250/2), 0);
+        drawOne(((rightW) - margin/2), 0);
     } else {
-        drawZero(((ofGetWidth() / 2) - 250/2), 0);
+        drawZero(((rightW) - margin/2), 0);
     }
     
     
     if(keyDown && base[2]) {
-        drawOne(((ofGetWidth() / 2) - 250/2), 1 * (numberSpace - zeroH * binScale));
+        drawOne(((rightW) - margin/2), 1 * (startMargin));
     } else {
-        drawZero(((ofGetWidth() / 2) - 250/2), 1 * (numberSpace - zeroH * binScale));
+        drawZero(((rightW) - margin/2), 1 * (startMargin));
     }
     
     
     if(keyDown && base[1]) {
-        drawOne(((ofGetWidth() / 2) - 250/2), 2 * (numberSpace - zeroH * binScale));
+        drawOne(((rightW) - margin/2), 2 * (startMargin));
     } else {
-        drawZero(((ofGetWidth() / 2) - 250/2), 2 * (numberSpace - zeroH * binScale));
+        drawZero(((rightW) - margin/2), 2 * (startMargin));
     }
     
         
         
     if(keyDown && base[0]) {
-        drawOne(((ofGetWidth() / 2) - 250/2), 3 * (numberSpace - zeroH * binScale));
+        drawOne(((rightW) - margin/2), 3 * (startMargin));
     } else {
-        drawZero(((ofGetWidth() / 2) - 250/2), 3 * (numberSpace - zeroH * binScale));
+        drawZero(((rightW) - margin/2), 3 * (startMargin));
     }
         
     
@@ -625,7 +662,6 @@ void ofApp::draw(){
     ofPopMatrix();
      
      
-    
     
 }
 
