@@ -66,7 +66,7 @@ void ofApp::setup(){
     
      
     // display settings
-    ofSetCircleResolution(20);
+    ofSetCircleResolution(5);
     
     // load fonts
     canelaThin.load("canela-thin.ttf", 120, true, true, true);
@@ -87,7 +87,7 @@ void ofApp::setup(){
            
          
             // get random positions and sizes for archive photos
-            scales.push_back(ofRandom(0.005, 0.12));
+            scales.push_back(ofRandom(0.005, 0.15));
             posX.push_back(ofRandom(10 , (leftW - ((archiveImages[i].getWidth() * scales[i]))) - 20));
             posY.push_back(ofRandom(10, (leftH - ((archiveImages[i].getHeight() * scales[i]))) -  10 ));
               
@@ -99,7 +99,7 @@ void ofApp::setup(){
             randomShapeNum.push_back(ofRandom(1,2));
             randomPixelSpacing.push_back(ofRandom(1,4));
             
-            focus.push_back(0); 
+            focus.push_back(0);
             reverseFocus.push_back(ofMap(focus[i], 0, 3, 5, 3));
             opacity.push_back(255);
         
@@ -116,7 +116,7 @@ void ofApp::setup(){
              
            
               // get random positions and sizes for archive photos
-              scales.push_back(ofRandom(0.005, 0.12));
+              scales.push_back(ofRandom(0.005, 0.15));
               posX.push_back(ofRandom(10 , (leftW - ((archiveImages[i].getWidth() * scales[i]))) - 20));
               posY.push_back(ofRandom(10, (leftH - ((archiveImages[i].getHeight() * scales[i]))) -  10 ));
                 
@@ -266,8 +266,9 @@ void ofApp::draw(){
      
     ofSetColor(255);
        
-    ofSetColor(255,0,0);
+    ofSetColor(100);
     
+    ofDrawBitmapString(ofToString(ofGetFrameRate()), 50,50);
       
     
     
@@ -416,6 +417,11 @@ void ofApp::draw(){
                     
 //                         for(int x = 0; x < archiveImgWidth; x += step * 1.5) {
 //                             for(int y = 0; y < archiveImgHeight; y += step * 1.5) {
+                    
+                    
+                    ofMesh m;
+                    m.setMode(OF_PRIMITIVE_LINES);
+                    
                     for(int x = 0; x < archiveImgWidth; x += step * randomPixelSpacing[i]) {
                         for(int y = 0; y < archiveImgHeight; y += step * randomPixelSpacing[i]) {
 
@@ -423,7 +429,7 @@ void ofApp::draw(){
 
  
 
-                                    ofFill();
+                                    //ofFill();
                                     ofSetColor(c);
                             
                                     ofSetLineWidth(lineT);
@@ -431,23 +437,39 @@ void ofApp::draw(){
                             
                             
                             
-                                    if (focus[i] > 0) {
-                                        ofDrawLine(
-                                        x,
-                                        y,
-                                        x + (3 - focus[i]),
-                                        y + (3 - focus[i]) );
+                                    if (focus[keyNumber] < 1) {
+//                                        m.addVertex(ofPoint(x,y));
+//                                        m.addVertex(ofPoint(x + (3 - focus[i]),y + (3 - focus[i])));
+//
+                                        
+                                        
+                                        if(ofRandom(1) < 0.2) {
+                                            ofDrawLine(
+                                            x,
+                                            y,
+                                            x + (3 - focus[i]),
+                                            y + (3 - focus[i]) );
+                                            
+                                        } else {
+                                            
+                                            m.addVertex(ofPoint(x,y));
+                                            m.addVertex(ofPoint(x + (3 - focus[i]),y + (3 - focus[i])));
+ 
+                                        }
+                                            
+                                        
+                                        
+                                    }
                                     
+                                     if (focus[keyNumber] > 0) {
+                                        
+                                         
+//
+                                            m.addVertex(ofPoint(x,y));
+                                            m.addVertex(ofPoint(x + lineX, y + lineY +  (3 - focus[i])));
+//
                                         
                                         
-                                        
-                                    } else {
-                                        
-                                        ofDrawLine(
-                                             x,
-                                             y,
-                                             x + lineX,
-                                             y + lineY +  (3 - focus[i]) );
                                     }
 //
 
@@ -456,6 +478,7 @@ void ofApp::draw(){
                                 } //end for y
                          } // end for x
                     
+                    m.draw();
                     ofPopMatrix();
                         
                 }
@@ -779,7 +802,7 @@ void ofApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
